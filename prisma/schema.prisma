@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Transaction {
+  id          String          @id @default(cuid())
+  userId      String          @map("user_id")
+  date        DateTime
+  description String
+  category    String
+  type        TransactionType
+  card        String?
+  installment String?
+  planned     Float?
+  actual      Float
+  deletedAt   DateTime?       @map("deleted_at")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  @@map("transactions")
+}
+
+enum TransactionType {
+  RECEITA
+  FIXO
+  CARTAO
+  VARIAVEL
+  PARCELA
+}
